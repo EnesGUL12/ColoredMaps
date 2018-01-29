@@ -26,7 +26,9 @@ class Node():
     def AddPeer(self, node):
         if not self.IsLinked(node):
             self.peers.append(node)
-        node.AddPeer(self)
+            node.AddPeer(self)
+        elif not node.IsLinked(self):
+            raise Exception("Broken link from", node.name, "to", self.name)
     
     def IsLinked(self, node):
         for n in self.peers:
