@@ -44,7 +44,7 @@ def run():
             if event.type == pygame.KEYDOWN:
                 logging.debug("[EVT] Key pressed [%s]",
                               pygame.key.name(event.key))
-                if event.type == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
                     done = True
                     continue
 
