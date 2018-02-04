@@ -58,55 +58,55 @@ MAP_NODES = [
     ["FL", 7, 6]
 ]
 MAP_LINKS = {
-    "WA": ["OR", "ID"],
-    "ID": ["WA", "MT", "WY", "UT", "NV", "OR"],
-    "MT": ["ID", "WY", "SD", "ND",],
-    "ND": ["MT", "SD", "MN"],
-    "MN": ["ND", "SD", "IA", "WI"],
-    "WI": ["MN", "IA", "MI", "IL"],
-    "MI": ["WI", "OH", "IN"],
-    "NY": ["PA", "CT", "NJ", "MA", "VT"],
-    "VT": ["NY", "NH", "MA"],
+    "WA": ["ID", "OR"],
+    "ID": ["MT", "WY", "UT", "NV", "OR", "WA"],
+    "MT": ["ND", "SD", "WY", "ID"],
+    "ND": ["MN", "SD", "MT"],
+    "MN": ["WI", "IA", "SD", "ND"],
+    "WI": ["MI", "IL", "IA", "MN"],
+    "MI": ["OH", "IN", "WI"],
+    "NY": ["VT", "MA", "CT", "NJ", "PA"],
+    "VT": ["NH", "MA", "NY"],
     "ME": ["NH"],
-    "OR": ["WA", "CA", "ID", "NV"],
-    "NV": ["OR", "UT", "ID", "CA", "AZ"],
-    "UT": ["NV", "WY", "CO", "AZ", "ID"],
-    "WY": ["SD", "NE", "CO", "UT", "MT", "ID"],
-    "SD": ["WY", "NL", "ND", "MT", "MN", "IA"],
+    "OR": ["WA", "ID", "NV", "CA"],
+    "NV": ["ID", "UT", "AZ", "CA", "OR"],
+    "UT": ["ID", "WY", "CO", "AZ", "NV"],
+    "WY": ["MT", "SD", "NE", "CO", "UT", "ID"],
+    "SD": ["ND", "MN", "IA", "NE", "WY", "MT"],
     "IA": ["MN", "WI", "IL", "MO", "NE", "SD"],
-    "IL": ["WI", "IA", "MO", "IN"],
-    "OH": ["IN", "MI", "KY", "PY", "WV"],
-    "PA": ["OH", "WV", "DE", "MD", "NJ", "NY"],
-    "NJ": ["PA", "DE", "NY"],
-    "MA": ["CT", "NY", "VT", "NH", "RI"],
-    "NH": ["MA", "VT", "ME"],
+    "IL": ["WY", "IN", "MO", "IA"],
+    "OH": ["MI", "PA", "WV", "KY", "IN"],
+    "PA": ["NY", "NJ", "DE", "MD", "WV", "OH"],
+    "NJ": ["NY", "DE", "PA"],
+    "MA": ["VT", "NH", "RI", "CT", "NY"],
+    "NH": ["ME", "MA", "VT"],
     "CA": ["OR", "NV", "AZ"],
-    "AZ": ["NM", "CA", "NV", "UT"],
-    "CO": ["UT", "WY","NE", "KA", "OK", "NM"],
-    "NE": ["CO", "KA", "MO", "IA", "SO", "WY"],
-    "MO": ["IA", "AR", "NE", "IE", "TN", "KY", "KA", "OK"],
+    "AZ": ["UT", "NM", "CA", "NV"],
+    "CO": ["WY", "NE", "KA", "OK", "NM", "UT"],
+    "NE": ["SD", "IA", "MO", "KA", "CO", "WY"],
+    "MO": ["IA", "IL", "KY", "TN", "AR", "OK", "KA", "NE"],
     "IN": ["IL", "MI", "OH", "KY"],
-    "WV": ["PA", "OH", "MD", "WA", "KY"],
-    "DE": ["NJ", "PA", "MD"],
-    "CT": ["NY", "MA", "RI"],
+    "WV": ["PA", "MD", "VA", "KY", "OH"],
+    "DE": ["NJ", "MD", "PA"],
+    "CT": ["MA", "RI", "NY"],
     "RI": ["CT", "MA"],
-    "NM": ["AZ", "CO", "OK", "TX"],
-    "KA": ["OK", "NE", "CO", "MO"],
-    "AR": ["LA", "OK", "MO", "TX", "MS", "TN"],
-    "KY": ["IN", "MO", "WV", "VA", "TN"],
-    "VA": ["NC", "TN", "DC", "MD", "MV", "KY"],
-    "MD": ["VA", "DC", "DE", "WV"],
-    "OK": ["NM", "TX", "KA", "AR", "CO", "MO"],
-    "LA": ["AR", "TX", "MB"],
-    "MS": ["TN", "AR", "LA", "AL"],
-    "TN": ["AL", "MS", "AR", "GA", "NC", "VA", "KY", "MO"],
-    "NC": ["SC", "GA", "AR", "LA"],
-    "DC": ["VA", "MD"],
-    "TX": ["NM", "OK", "AR", "AL"],
+    "NM": ["CO", "OK", "TX", "AZ"],
+    "KA": ["NE", "MO", "OK", "CO"],
+    "AR": ["MO", "TN", "MS", "LA", "TX", "OK"],
+    "KY": ["OH", "WV", "VA", "TN", "MO", "IN"],
+    "VA": ["WV", "MD", "DC", "NC", "TN", "KY"],
+    "MD": ["DE", "DC", "VA", "WV", "PA"],
+    "OK": ["KA", "MO", "AR", "TX", "NM", "CO"],
+    "LA": ["AR", "MS", "TX"],
+    "MS": ["TN", "AL", "LA", "AR"],
+    "TN": ["KY", "VA", "NC", "GA", "AL", "MS", "AR", "MO"],
+    "NC": ["VA", "SC", "GA", "TN"],
+    "DC": ["MD", "VA"],
+    "TX": ["OK", "AR", "LA", "NM"],
     "AL": ["MS", "TN", "GA", "FL"],
-    "GA": ["AL", "TN", "NC", "SC", "FL"],
-    "SC": ["GA", "NC"],
-    "FL": ["AL", "GA"]
+    "GA": ["TN", "NC", "SC", "FL", "AL"],
+    "SC": ["NC", "GA"],
+    "FL": ["GA", "AL"]
 }
 
 class Node():
@@ -141,10 +141,14 @@ def map_create():
         map[mi[0]] = Node(mi[0], mi[1], mi[2])
     
     # Пройти по MAP_LINKS 
-    for n, l in MAP_LINKS:    
+    for n in MAP_LINKS:    
         # Связать узлы
-        for ll in l:
+        for ll in MAP_LINKS[n]:
             map[n].AddPeer(map[ll])
 
     return map
     
+
+
+def main():
+    cmap = map_create()
