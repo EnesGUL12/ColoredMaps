@@ -22,6 +22,12 @@ MIN_S_SIZE = (12 * NODE_SIZE + 11 * NODE_SPACE + S_OFFSET[1] + S_OFFSET[3],
 C_BKGROUND  = ( 18,  81,   9)
 C_GRAY_LINE = (128, 128, 128)
 
+C_YELLOW  = (255, 255,   0)
+C_CYAN    = (  0, 255, 255)
+C_PINK    = (255,   0, 255)
+C_ORANGE  = (255, 128,   0)
+C_WHITE   = (255, 255, 255)
+C_COLORS = [C_YELLOW, C_CYAN, C_PINK, C_ORANGE, C_WHITE]
 
 def run():
     """
@@ -37,9 +43,10 @@ def run():
     clock = pygame.time.Clock()
 
     # Инициализировать карту цветов
-    cmap = cmaps.map_create()
+    cmap = cmaps.get_cmap()
 
     done = False
+    ax, ay = -1, -1
     while not done:
 
         # --- Main event loop
@@ -56,36 +63,66 @@ def run():
                     done = True
                     break
 
+            if event.type == pygame.MOUSEMOTION:
+                mx, my = pygame.mouse.get_pos()
+                if (mx >= S_OFFSET[3] and mx <= MIN_S_SIZE[0] - S_OFFSET[1] and
+                    my >= S_OFFSET[0] and my <= MIN_S_SIZE[1] - S_OFFSET[2]):
+                    ax, ay = -1, -1
+                    for x in range(12):
+                        xx = S_OFFSET[3] + x * (NODE_SIZE + NODE_SPACE)
+                        if mx >= xx and mx <= xx + NODE_SIZE:
+                            ax = x
+                            break
+                    for y in range(7):
+                        yy = S_OFFSET[0] + y * (NODE_SIZE + NODE_SPACE)
+                        if my >= yy and my <= yy + NODE_SIZE:
+                            ay = y
+                            break
+            
         # Логика приложения
-
+                
         # Очистить экран
         screen.fill(C_BKGROUND)
 
         # Подготавливаем картинку
         # TODO: убрать двойную прорисовку линий
+        anode = ""
         for nm in cmap:
             nd = cmap[nm]
+            nline = C_GRAY_LINE
+            if ax == nd.x and ay == nd.y:
+                anode = nm
             for ndd in cmap[nm].peers:
-                pygame.draw.line(screen, C_GRAY_LINE, 
+                pygame.draw.line(screen, nline, 
                                  (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
                                   S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 
                                  (S_OFFSET[3] + ndd.x * (NODE_SIZE  + NODE_SPACE) + int(NODE_SIZE / 2),
                                   S_OFFSET[0] + ndd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 2)
 
+        if anode != "":
+            nd = cmap[anode]
+            nline = C_COLORS[nd.color]
+            for ndd in cmap[anode].peers:
+                pygame.draw.line(screen, nline, 
+                                 (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
+                                  S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 
+                                 (S_OFFSET[3] + ndd.x * (NODE_SIZE  + NODE_SPACE) + int(NODE_SIZE / 2),
+                                  S_OFFSET[0] + ndd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 2)
+            
         for nm in cmap:
             nd = cmap[nm]
             pygame.draw.circle(screen, C_BKGROUND,
                                (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
                                 S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)),
                                int(NODE_SIZE / 2))
-            pygame.draw.circle(screen, C_GRAY_LINE,
+            pygame.draw.circle(screen, C_COLORS[nd.color],
                                (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
                                 S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)),
                                int(NODE_SIZE / 2), 2)
 
             font = pygame.font.SysFont("Consolas", 16, bold = True)
 
-            st_name = font.render(nm, True, C_GRAY_LINE)
+            st_name = font.render(nm, True, C_COLORS[nd.color])
         
             screen.blit(st_name, (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2) - 10,
                                   S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2) - 8))

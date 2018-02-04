@@ -5,6 +5,7 @@
 # dr.doberman, EnesGUL, Faf_Faf
 #
 
+import sys
 
 MAP_NODES = [
     ["WA", 0, 0],
@@ -74,7 +75,7 @@ MAP_LINKS = {
     "WY": ["MT", "SD", "NE", "CO", "UT", "ID"],
     "SD": ["ND", "MN", "IA", "NE", "WY", "MT"],
     "IA": ["MN", "WI", "IL", "MO", "NE", "SD"],
-    "IL": ["WY", "IN", "MO", "IA"],
+    "IL": ["WI", "IN", "MO", "IA"],
     "OH": ["MI", "PA", "WV", "KY", "IN"],
     "PA": ["NY", "NJ", "DE", "MD", "WV", "OH"],
     "NJ": ["NY", "DE", "PA"],
@@ -131,6 +132,23 @@ class Node():
         
         return False
 
+    def Paint(self):
+        acol = set([0, 1, 2, 3, 4])
+        ucol = set()
+        for p in self.peers:
+            if p.color != -1:
+                ucol.add(p.color)
+
+        acol -= ucol
+        if len(acol) == 0:
+            print("Not enough colors!!!")
+            sys.exit(1)
+        self.color = acol.pop()
+
+        for p in self.peers:
+            if p.color == -1:
+                p.Paint()
+
 
 
 def map_create():
@@ -150,5 +168,14 @@ def map_create():
     
 
 
-def main():
+def get_cmap():
+    """
+    Creates colored map
+    
+    Return colored map of USA as Nodes dictionary
+    """
     cmap = map_create()
+
+    cmap["WA"].Paint()
+
+    return cmap    
