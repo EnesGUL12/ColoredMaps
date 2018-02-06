@@ -85,19 +85,22 @@ def run():
         screen.fill(C_BKGROUND)
 
         # Подготавливаем картинку
-        # TODO: убрать двойную прорисовку линий
+        dn = set()
+
         anode = ""
         for nm in cmap:
             nd = cmap[nm]
+            dn.add(nm)
             nline = C_GRAY_LINE
             if ax == nd.x and ay == nd.y:
                 anode = nm
             for ndd in cmap[nm].peers:
-                pygame.draw.line(screen, nline, 
-                                 (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
-                                  S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 
-                                 (S_OFFSET[3] + ndd.x * (NODE_SIZE  + NODE_SPACE) + int(NODE_SIZE / 2),
-                                  S_OFFSET[0] + ndd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 2)
+                if ndd.name not in dn:
+                    pygame.draw.line(screen, nline, 
+                                    (S_OFFSET[3] + nd.x * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2),
+                                    S_OFFSET[0] + nd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 
+                                    (S_OFFSET[3] + ndd.x * (NODE_SIZE  + NODE_SPACE) + int(NODE_SIZE / 2),
+                                    S_OFFSET[0] + ndd.y * (NODE_SIZE + NODE_SPACE) + int(NODE_SIZE / 2)), 2)
 
         if anode != "":
             nd = cmap[anode]
